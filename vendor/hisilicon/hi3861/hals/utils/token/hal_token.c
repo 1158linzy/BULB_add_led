@@ -378,7 +378,7 @@ static int OEMGetProdId(char *productId, unsigned int len)
         return -1;
     }
     // OEM need add product Id here,
-    const char* ProdId = "2705";
+    const char* ProdId = "2JPQ";
     if (memcpy_s(productId, len, ProdId, strlen(ProdId)) != 0) {
         return -1;
     }
@@ -389,7 +389,7 @@ static int OEMGetProdKey(char *productKey, unsigned int len)
 {
     // OEM need add here, get ProdKey
     // char productKeyBuf[] = "1234567890ABCDEF1234567890ABCDEF";
-    char productKeyBuf[] = "dba510ffde0e4d8aa1d2021ad8fa1bc7";
+    char productKeyBuf[] = "c5e4710e08a24fbfb656e8133ed4fcba";
     if (len > sizeof(productKeyBuf)) {
         return EC_FAILURE;
     }

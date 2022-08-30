@@ -34,16 +34,16 @@
 static const char OHOS_PRODUCT_TYPE[] = {"linkiot"};
 static const char OHOS_MANUFACTURE[] = {"boantong"};
 static const char OHOS_BRAND[] = {"BAT"};
-static const char OHOS_MARKET_NAME[] = {"BATCE-DM02"};
-static const char OHOS_PRODUCT_SERIES[] = {"GJTT"};
-static const char OHOS_PRODUCT_MODEL[] = {"GJTT-02"};
+static const char OHOS_MARKET_NAME[] = {"Smart-curtain"};
+static const char OHOS_PRODUCT_SERIES[] = {"CKTT"};
+static const char OHOS_PRODUCT_MODEL[] = {"CKTT-02"};
 static const char OHOS_SOFTWARE_MODEL[] = {"1.1.0"};
 static const char OHOS_HARDWARE_MODEL[] = {"1.0.0"};
 static const char OHOS_HARDWARE_PROFILE[] = {"aout:true,display:true"};
 static const char OHOS_BOOTLOADER_VERSION[] = {"bootloader"};
 static const char OHOS_SECURITY_PATCH_TAG[] = {"2020-09-01"};
 static const char OHOS_ABI_LIST[] = {"riscv_liteos"};
-static const char OHOS_SERIAL[] = {"1234567890"};  // provided by OEM.
+static const char OHOS_SERIAL[] = {"94C9601BCA84"};  // provided by OEM.
 
 char* HalGetProductType(void)
 {

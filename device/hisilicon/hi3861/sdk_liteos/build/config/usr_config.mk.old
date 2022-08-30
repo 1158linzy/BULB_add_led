@@ -93,6 +93,7 @@ CONFIG_OHOS_SUPPORT=y
 # Link Settings
 #
 # CONFIG_HILINK is not set
+CONFIG_HILINK=y
 # end of Link Settings
 
 #

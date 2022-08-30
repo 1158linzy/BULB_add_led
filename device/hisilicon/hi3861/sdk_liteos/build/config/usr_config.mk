@@ -99,4 +99,5 @@ CONFIG_HILINK=y
 # Debug Log Settings
 #
 # CONFIG_DIAG_SUPPORT is not set
+# CONFIG_DIAG_SUPPORT=y
 # end of Debug Log Settings
