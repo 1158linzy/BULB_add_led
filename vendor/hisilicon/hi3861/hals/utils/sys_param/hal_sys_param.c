@@ -33,7 +33,7 @@
 
 static const char OHOS_PRODUCT_TYPE[] = {"linkiot"};
 static const char OHOS_MANUFACTURE[] = {"boantong"};
-static const char OHOS_BRAND[] = {"BAT"};
+static const char OHOS_BRAND[] = {"boantong"};
 static const char OHOS_MARKET_NAME[] = {"Light"};
 static const char OHOS_PRODUCT_SERIES[] = {"LKTT"};
 static const char OHOS_PRODUCT_MODEL[] = {"LKTT-02"};
@@ -43,7 +43,7 @@ static const char OHOS_HARDWARE_PROFILE[] = {"aout:true,display:true"};
 static const char OHOS_BOOTLOADER_VERSION[] = {"bootloader"};
 static const char OHOS_SECURITY_PATCH_TAG[] = {"2020-09-01"};
 static const char OHOS_ABI_LIST[] = {"riscv_liteos"};
-static const char OHOS_SERIAL[] = {"94C9601BCA84"};  // provided by OEM.
+static const char OHOS_SERIAL[] = {"94C9601BCEED"};  // provided by OEM.
 
 char* HalGetProductType(void)
 {

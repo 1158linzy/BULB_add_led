@@ -16,7 +16,7 @@ static const char *SUB_PRODUCT_ID = "";
 /* 设备类型ID */
 static const char *DEVICE_TYPE_ID = "119";
 /* 设备类型英文名称 */
-static const char *DEVICE_TYPE_NAME = "Light Bulb";
+static const char *DEVICE_TYPE_NAME = "Bulb";
 /* 设备制造商ID */
 static const char *MANUAFACTURER_ID = "a66";
 /* 设备制造商英文名称 */
