@@ -10,19 +10,19 @@
 #define HILINK_APP
 
 /* 设备产品ID */
-static const char *PRODUCT_ID = "2JPQ";
+static const char *PRODUCT_ID = "2JSA";
 /* 设备产品子型号ID */
 static const char *SUB_PRODUCT_ID = "";
 /* 设备类型ID */
-static const char *DEVICE_TYPE_ID = "01C";
+static const char *DEVICE_TYPE_ID = "119";
 /* 设备类型英文名称 */
-static const char *DEVICE_TYPE_NAME = "Curtain";
+static const char *DEVICE_TYPE_NAME = "Light Bulb";
 /* 设备制造商ID */
 static const char *MANUAFACTURER_ID = "a66";
 /* 设备制造商英文名称 */
 static const char *MANUAFACTURER_NAME = "boantong";
 /* 设备型号 */
-static const char *PRODUCT_MODEL = "CKTT-02";
+static const char *PRODUCT_MODEL = "LKTT-02";
 /* 设备SN */
 static const char *PRODUCT_SN = "";
 /* 设备固件版本号 */

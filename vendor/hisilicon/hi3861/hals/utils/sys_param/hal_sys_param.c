@@ -34,9 +34,9 @@
 static const char OHOS_PRODUCT_TYPE[] = {"linkiot"};
 static const char OHOS_MANUFACTURE[] = {"boantong"};
 static const char OHOS_BRAND[] = {"BAT"};
-static const char OHOS_MARKET_NAME[] = {"Smart-curtain"};
-static const char OHOS_PRODUCT_SERIES[] = {"CKTT"};
-static const char OHOS_PRODUCT_MODEL[] = {"CKTT-02"};
+static const char OHOS_MARKET_NAME[] = {"Light"};
+static const char OHOS_PRODUCT_SERIES[] = {"LKTT"};
+static const char OHOS_PRODUCT_MODEL[] = {"LKTT-02"};
 static const char OHOS_SOFTWARE_MODEL[] = {"1.1.0"};
 static const char OHOS_HARDWARE_MODEL[] = {"1.0.0"};
 static const char OHOS_HARDWARE_PROFILE[] = {"aout:true,display:true"};
