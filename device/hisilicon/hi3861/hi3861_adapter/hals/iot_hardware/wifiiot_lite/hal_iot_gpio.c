@@ -56,7 +56,7 @@ unsigned int IoTGpioGetDir(unsigned int id, IotGpioDir *dir)
 
 unsigned int IoTGpioSetOutputVal(unsigned int id, IotGpioValue val)
 {
-    return hi_gpio_set_ouput_val((hi_gpio_idx)id, (hi_gpio_value)val);
+    return hi_gpio_set_output_val((hi_gpio_idx)id, (hi_gpio_value)val);
 }
 
 unsigned int IoTGpioGetOutputVal(unsigned int id, IotGpioValue *val)

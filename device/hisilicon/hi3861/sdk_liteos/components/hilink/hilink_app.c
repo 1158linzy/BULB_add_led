@@ -2,6 +2,14 @@
 #include "hilink_log.h"
 #include <stdlib.h>
 
+#include <unistd.h>
+
+// #include "ohos_init.h"
+#include "hi_cmsis_os2.h"
+#include <hi_io.h>
+#include "hi_gpio.h"
+#include "hsi_gpio.h"
+
 #define M2M_NO_ERROR 0
 #define M2M_SVC_RPT_CREATE_PAYLOAD_ERR -201
 
@@ -9,11 +17,73 @@
 #define INVALID_PACKET -87
 #endif
 
+#define LED_INTERVAL_TIME_US 300000
+#define LED_TASK_STACK_SIZE 512
+#define LED_TASK_PRIO 25
+#define LED_TEST_GPIO 12 
+//#define LED_TEST_GPIO 9 // for hispark_pegasus
+
 typedef struct {
 	unsigned int switch_on;
 	unsigned int faltDetection_code;
 	unsigned int faltDetection_status;
 } t_device_info;
+
+enum LedState {
+    LED_ON = 0,
+    LED_OFF,
+    LED_SPARK,
+};
+
+enum LedState g_ledState = LED_SPARK;
+static void *LedTask(const char *arg)
+{
+    (void)arg;
+    while (1) {
+        switch (g_ledState) {
+            case LED_ON:
+                IoTGpioSetOutputVal(LED_TEST_GPIO, 1);
+                usleep(LED_INTERVAL_TIME_US);
+                break;
+            case LED_OFF:
+                IoTGpioSetOutputVal(LED_TEST_GPIO, 0);
+                usleep(LED_INTERVAL_TIME_US);
+                break;
+            case LED_SPARK:
+                IoTGpioSetOutputVal(LED_TEST_GPIO, 0);
+                usleep(LED_INTERVAL_TIME_US);
+                IoTGpioSetOutputVal(LED_TEST_GPIO, 1);
+                usleep(LED_INTERVAL_TIME_US);
+                break;
+            default:
+                usleep(LED_INTERVAL_TIME_US);
+                break;
+        }
+    }
+
+    return NULL;
+}
+static void LedExampleEntry(void)
+{
+    osThreadAttr_t attr;
+
+    IoTGpioInit(LED_TEST_GPIO);
+    IoTGpioSetDir(LED_TEST_GPIO, IOT_GPIO_DIR_OUT);
+
+    attr.name = "LedTask";
+    attr.attr_bits = 0U;
+    attr.cb_mem = NULL;
+    attr.cb_size = 0U;
+    attr.stack_mem = NULL;
+    attr.stack_size = LED_TASK_STACK_SIZE;
+    attr.priority = LED_TASK_PRIO;
+
+    if (osThreadNew((osThreadFunc_t)LedTask, NULL, &attr) == NULL) {
+        printf("[LedExample] Falied to create LedTask!\n");
+    }
+}
+
+SYS_RUN(LedExampleEntry);
 
 static t_device_info g_device_info = { 0 };
 
@@ -47,6 +117,17 @@ int handle_get_switch(const char *svc_id, const char *in, unsigned int in_len, c
 		printf("malloc failed in GET cmd: ser %s in GET cmd", svc_id);
 		return INVALID_PACKET;
 	}
+	//LedTask(*out);
+	// if(svc_id == 1)
+	// {
+	// 	IoTGpioSetOutputVal(LED_TEST_GPIO, 1);
+	// 	printf("fgfghfhgfhgf");
+	// }
+	// if(svc_id == 0)
+	// {
+	// 	IoTGpioSetOutputVal(LED_TEST_GPIO, 0);
+	// 	printf("xxxxxxxxxxx");
+	// }
 	*out_len = sprintf(*out, "{\"on\":%d}", on);
 	printf("hilink_device_ctr.c :%d %s svcId:%s, out:%s\r\n", __LINE__,
 			__FUNCTION__, svc_id, *out);
@@ -125,6 +206,8 @@ int hilink_put_char_state(const char *svc_id, const char *payload, unsigned int 
 		hilink_error("empty payload in PUT cmd");
 		return M2M_SVC_RPT_CREATE_PAYLOAD_ERR;
 	}
+	
+
 	hilink_debug("start handle PUT cmd: ID-%s", svc_id);
 	err = handle_put_cmd(svc_id, payload, len);
 	hilink_debug("handle PUT cmd end: ID-%s, ret-%d", svc_id, err);
