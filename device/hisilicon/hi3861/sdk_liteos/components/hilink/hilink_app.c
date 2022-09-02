@@ -42,25 +42,6 @@ static void *LedTask(const char *arg)
 {
     (void)arg;
     while (1) {
-        // switch (g_ledState) {
-        //     case LED_ON:
-        //         IoTGpioSetOutputVal(LED_TEST_GPIO, 1);
-        //         usleep(LED_INTERVAL_TIME_US);
-        //         break;
-        //     case LED_OFF:
-        //         IoTGpioSetOutputVal(LED_TEST_GPIO, 0);
-        //         usleep(LED_INTERVAL_TIME_US);
-        //         break;
-        //     case LED_SPARK:
-        //         IoTGpioSetOutputVal(LED_TEST_GPIO, 0);
-        //         usleep(LED_INTERVAL_TIME_US);
-        //         IoTGpioSetOutputVal(LED_TEST_GPIO, 1);
-        //         usleep(LED_INTERVAL_TIME_US);
-        //         break;
-        //     default:
-        //         usleep(LED_INTERVAL_TIME_US);
-        //         break;
-        // }
 		if(g_device_info.switch_on == 1)
 		{
 			    IoTGpioSetOutputVal(LED_TEST_GPIO, 1);
@@ -131,17 +112,6 @@ int handle_get_switch(const char *svc_id, const char *in, unsigned int in_len, c
 		printf("malloc failed in GET cmd: ser %s in GET cmd", svc_id);
 		return INVALID_PACKET;
 	}
-	//LedTask(*out);
-	// if(svc_id == 1)
-	// {
-	// 	IoTGpioSetOutputVal(LED_TEST_GPIO, 1);
-	// 	printf("fgfghfhgfhgf");
-	// }
-	// if(svc_id == 0)
-	// {
-	// 	IoTGpioSetOutputVal(LED_TEST_GPIO, 0);
-	// 	printf("xxxxxxxxxxx");
-	// }
 	*out_len = sprintf(*out, "{\"on\":%d}", on);
 	printf("hilink_device_ctr.c :%d %s svcId:%s, out:%s\r\n", __LINE__,
 			__FUNCTION__, svc_id, *out);
