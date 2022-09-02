@@ -48,7 +48,7 @@ void __attribute__((weak)) OHOS_SystemInit(void)
 {
     return;
 }
-
+extern void LedExampleEntry(void);
 void OHOS_Main()
 {
 #if defined(CONFIG_AT_COMMAND) || defined(CONFIG_FACTORY_TEST_MODE)
@@ -61,5 +61,6 @@ void OHOS_Main()
         }
     }
 #endif
+    LedExampleEntry();
     OHOS_SystemInit();
 }

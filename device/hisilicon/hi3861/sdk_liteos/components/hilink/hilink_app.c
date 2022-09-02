@@ -16,7 +16,7 @@
 #ifndef INVALID_PACKET
 #define INVALID_PACKET -87
 #endif
-
+//LED配置
 #define LED_INTERVAL_TIME_US 300000
 #define LED_TASK_STACK_SIZE 512
 #define LED_TASK_PRIO 25
@@ -35,35 +35,49 @@ enum LedState {
     LED_SPARK,
 };
 
+static t_device_info g_device_info = { 0 };
+
 enum LedState g_ledState = LED_SPARK;
 static void *LedTask(const char *arg)
 {
     (void)arg;
     while (1) {
-        switch (g_ledState) {
-            case LED_ON:
-                IoTGpioSetOutputVal(LED_TEST_GPIO, 1);
+        // switch (g_ledState) {
+        //     case LED_ON:
+        //         IoTGpioSetOutputVal(LED_TEST_GPIO, 1);
+        //         usleep(LED_INTERVAL_TIME_US);
+        //         break;
+        //     case LED_OFF:
+        //         IoTGpioSetOutputVal(LED_TEST_GPIO, 0);
+        //         usleep(LED_INTERVAL_TIME_US);
+        //         break;
+        //     case LED_SPARK:
+        //         IoTGpioSetOutputVal(LED_TEST_GPIO, 0);
+        //         usleep(LED_INTERVAL_TIME_US);
+        //         IoTGpioSetOutputVal(LED_TEST_GPIO, 1);
+        //         usleep(LED_INTERVAL_TIME_US);
+        //         break;
+        //     default:
+        //         usleep(LED_INTERVAL_TIME_US);
+        //         break;
+        // }
+		if(g_device_info.switch_on == 1)
+		{
+			    IoTGpioSetOutputVal(LED_TEST_GPIO, 1);
                 usleep(LED_INTERVAL_TIME_US);
-                break;
-            case LED_OFF:
-                IoTGpioSetOutputVal(LED_TEST_GPIO, 0);
+			
+		}
+		if(g_device_info.switch_on == 0)
+		{
+			    IoTGpioSetOutputVal(LED_TEST_GPIO, 0);
                 usleep(LED_INTERVAL_TIME_US);
-                break;
-            case LED_SPARK:
-                IoTGpioSetOutputVal(LED_TEST_GPIO, 0);
-                usleep(LED_INTERVAL_TIME_US);
-                IoTGpioSetOutputVal(LED_TEST_GPIO, 1);
-                usleep(LED_INTERVAL_TIME_US);
-                break;
-            default:
-                usleep(LED_INTERVAL_TIME_US);
-                break;
-        }
+				
+		}
     }
 
     return NULL;
 }
-static void LedExampleEntry(void)
+void LedExampleEntry(void)
 {
     osThreadAttr_t attr;
 
@@ -85,7 +99,7 @@ static void LedExampleEntry(void)
 
 SYS_RUN(LedExampleEntry);
 
-static t_device_info g_device_info = { 0 };
+
 
 int handle_put_switch(const char *svc_id, const char *payload, unsigned int len) {
 
