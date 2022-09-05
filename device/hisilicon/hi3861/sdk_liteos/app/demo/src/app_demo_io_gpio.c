@@ -34,7 +34,7 @@ hi_void io_gpio_demo(hi_void)
         return;
     }
     printf("----- gpio init success-----\r\n");
-
+    //复用管脚
     ret = hi_io_set_func(HI_IO_NAME_GPIO_0, HI_IO_FUNC_GPIO_0_GPIO);
     if (ret != HI_ERR_SUCCESS) {
         printf("===== ERROR ===== gpio -> hi_io_set_func ret:%d\r\n", ret);
@@ -55,7 +55,7 @@ hi_void io_gpio_demo(hi_void)
         return;
     }
     printf("----- gpio input val is:%d. -----\r\n", gpio_val);
-
+    //去使能
     ret = hi_gpio_deinit();
     if (ret != HI_ERR_SUCCESS) {
         printf("===== ERROR ===== gpio -> hi_gpio_deinit ret:%d\r\n", ret);

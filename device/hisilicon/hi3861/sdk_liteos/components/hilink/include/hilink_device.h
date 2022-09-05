@@ -31,7 +31,7 @@ typedef struct {
     char svcType[32];  /* 服务类型，长度范围(0, 32] */
     char svcId[64];    /* 服务ID，长度范围(0, 64] */
 } HILINK_SvcInfo;
-
+//设备状态
 enum HILINK_StateMachine {
     /* 设备与云端连接断开(版本向前兼容) */
     HILINK_M2M_CLOUD_OFFLINE = 0,

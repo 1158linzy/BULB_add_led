@@ -10,6 +10,8 @@
 #include "hi_gpio.h"
 #include "hsi_gpio.h"
 
+#include <app_demo_io_gpio.h>
+
 #define M2M_NO_ERROR 0
 #define M2M_SVC_RPT_CREATE_PAYLOAD_ERR -201
 
@@ -18,10 +20,12 @@
 #endif
 //LED配置
 #define LED_INTERVAL_TIME_US 300000
-#define LED_TASK_STACK_SIZE 512
+#define LED_TASK_STACK_SIZE 1024
 #define LED_TASK_PRIO 25
-#define LED_TEST_GPIO 12 
-//#define LED_TEST_GPIO 9 // for hispark_pegasus
+//#define LED_TEST_GPIO 12 
+#define LED_TEST_GPIO 2 
+#define KEY_TEST_GPIO 7
+
 
 typedef struct {
 	unsigned int switch_on;
@@ -34,38 +38,91 @@ enum LedState {
     LED_OFF,
     LED_SPARK,
 };
+enum LedSpeed{
+	FAST = 0,
+	MIDDLE,
+	SLOW,
+};
 
 static t_device_info g_device_info = { 0 };
 
 enum LedState g_ledState = LED_SPARK;
-static void *LedTask(const char *arg)
+enum LedSpeed g_ledspeed = FAST;
+hi_gpio_value gpio_val = HI_GPIO_VALUE1;
+
+static void *Led_and_Key_Task(const char *arg)
 {
     (void)arg;
     while (1) {
+		//判断从DP 平台下发的命令解析后数据
 		if(g_device_info.switch_on == 1)
-		{
+		{//给高电平，灯亮
 			    IoTGpioSetOutputVal(LED_TEST_GPIO, 1);
                 usleep(LED_INTERVAL_TIME_US);
-			
 		}
 		if(g_device_info.switch_on == 0)
-		{
+		{/*给低电平，灯灭*/
 			    IoTGpioSetOutputVal(LED_TEST_GPIO, 0);
                 usleep(LED_INTERVAL_TIME_US);
-				
+		}
+		//轮询获取按键输入的电平，先读取一次
+		hi_gpio_get_input_val(HI_GPIO_IDX_7, &gpio_val);
+		//判断读取到的电平
+		if(gpio_val == HI_GPIO_VALUE0)
+		{
+			hi_sleep(100);
+			while (gpio_val==HI_GPIO_VALUE0)
+			{//松手检测
+				hi_gpio_get_input_val(HI_GPIO_IDX_7, &gpio_val);/* code */
+			}
+			printf("Key was pressed!\r\n");
+			IoTGpioSetOutputVal(LED_TEST_GPIO, 1);
+    		usleep(LED_INTERVAL_TIME_US);
 		}
     }
-
     return NULL;
+}
+
+hi_void io_gpio_demo(hi_void)
+{
+    /* Take gpio 0 as an example */
+    hi_u32 ret;
+	IoTGpioInit(KEY_TEST_GPIO);
+     //ret = hi_gpio_init();
+    // if (ret != HI_ERR_SUCCESS) {
+    //     printf("===== ERROR ===== gpio -> hi_gpio_init ret:%d\r\n", ret);
+    //     return;
+    // }
+    // printf("----- gpio init success-----\r\n");
+
+	//复用管脚功能
+    ret = hi_io_set_func(HI_IO_NAME_GPIO_7, HI_IO_FUNC_GPIO_7_GPIO);
+    if (ret != HI_ERR_SUCCESS) {
+        printf("===== ERROR ===== gpio -> hi_io_set_func ret:%d\r\n", ret);
+        return;
+    }
+    printf("----- io set func success-----\r\n");
+	//设置上拉电阻
+	hi_io_set_pull(HI_IO_NAME_GPIO_7,HI_IO_PULL_UP);
+	hi_io_set_driver_strength(HI_IO_NAME_GPIO_7,HI_IO_DRIVER_STRENGTH_0);
+	//设置管脚模式
+    ret = hi_gpio_set_dir(HI_GPIO_IDX_7, HI_GPIO_DIR_IN);
+    if (ret != HI_ERR_SUCCESS) {
+        printf("===== ERROR ===== gpio -> hi_gpio_set_dir1 ret:%d\r\n", ret);
+        return;
+    }
+    printf("----- gpio set dir success! -----\r\n");
 }
 void LedExampleEntry(void)
 {
     osThreadAttr_t attr;
-
+	//LED
     IoTGpioInit(LED_TEST_GPIO);
     IoTGpioSetDir(LED_TEST_GPIO, IOT_GPIO_DIR_OUT);
+	//key
+	io_gpio_demo();
 
-    attr.name = "LedTask";
+    attr.name = "Led_and_Key_Task";
     attr.attr_bits = 0U;
     attr.cb_mem = NULL;
     attr.cb_size = 0U;
@@ -73,14 +130,12 @@ void LedExampleEntry(void)
     attr.stack_size = LED_TASK_STACK_SIZE;
     attr.priority = LED_TASK_PRIO;
 
-    if (osThreadNew((osThreadFunc_t)LedTask, NULL, &attr) == NULL) {
-        printf("[LedExample] Falied to create LedTask!\n");
+    if (osThreadNew((osThreadFunc_t)Led_and_Key_Task, NULL, &attr) == NULL) {
+        printf("[LedExample] Falied to create Led_and_Key_Task!\n");
     }
 }
 
 SYS_RUN(LedExampleEntry);
-
-
 
 int handle_put_switch(const char *svc_id, const char *payload, unsigned int len) {
 
@@ -95,6 +150,7 @@ int handle_put_switch(const char *svc_id, const char *payload, unsigned int len)
 			&& (on == 0 || on == 1)) {
 		on_p = &on;
 	}
+	//全局变量，获取解析从DP平台下发的命令
 	g_device_info.switch_on = *on_p;
 	if (pJson != NULL) {
 		hilink_json_delete(pJson);
